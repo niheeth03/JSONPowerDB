@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Add data into database</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"/>
+    <style>
+            body {
+                background-color: yellow;
+                border: 1px #ccc;
+                background-position:top;
+                background-size: 100% 60%;
+                position: relative;
+            }
+            input {
+                width: 100%;
+                padding: 10px 15px;
+                margin: 6px 0;
+                display: inline-block;
+                box-sizing: border-box;
+
+            }
+
+
+            input, select, textarea{
+                color: #ffffff;
+            }
+
+            button {
+                background-color:  #6ee4c8;
+                color: white;
+                padding: 10px 15px;
+                margin: 8px 0;
+                border: none;
+                cursor: pointer;
+                width: 100%;
+            }
+
+
+            button:hover {
+                opacity: 0.8;
+            }
+
+
+
+            .container {
+                padding: 8px;
+            }
+
+
+
+
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script> src="http://login2explore.com/jpdb/resources/js/0.0.4/jpdb-commons.js"</script>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Essential Details</h2>
+      <form id="empForm" method="post">
+        <div class="form-group">
+          <span><label for="ID">Employee ID:</label><label id="IDMsg"> </label></span>
+          <input type="text" class="form-control" name="ID" id="ID" placeholder="Enter Employee ID" required/>
+        </div>
+        <div class="form-group">
+          <label for="NAME">Employee Name:</label>
+          <input type="text" class="form-control" id="NAME" placeholder="Enter Employee Name" name="NAME"/>
+        </div>
+        <div class="form-group">
+          <label for="EMAIL">Email:</label>
+          <input type="email" class="form-control" id="EMAIL" placeholder="Enter Employee Email" name="EMAIL" />
+        </div>
+        <input type="button" class="btn btn-primary" id="empSave" value="Save" onclick="saveEmployee();"/>
+      </form>
+    </div>
+    <script>
+      $("#ID").focus();
+      function required() {
+        var IDVar = $("#ID").val();
+        if (IDVar === "") {
+          alert("Employee ID Required Value");
+          $("#ID").focus();
+          return "";
+        }
+        var NAMEVar = $("#NAME").val();
+        if (NAMEVar === "") {
+          alert("Employee Name is Required Value");
+          $("#NAME").focus();
+          return "";
+        }
+        var EMAILVar = $("#EMAIL").val();
+        if (EMAILVar === "") {
+          alert("Employee Email is Required Value");
+          $("#EMAIL").focus();
+          return "";
+        }
+        var jsonStrObj = {ID: IDVar,NAME: NAMEVar,EMAIL: EMAILVar,};
+        return JSON.stringify(jsonStrObj);
+      }
+      function emptytheblanks() {
+        $("#ID").val("");
+        $("#NAME").val("");
+        $("#EMAIL").val("");
+        $("#ID").focus();
+      }
+      function saveEmployee() {
+        var jsonStr = required();
+        if (jsonStr === "") {
+          return;
+        }
+        var putReqStr = createPUTRequest(
+          "90938895|-31949290505826079|90941368",jsonStr,"Employee","Emp-Rel"
+        );
+        alert(putReqStr);
+        jQuery.ajaxSetup({ async: false });
+        var resultObj = executeCommandAtGivenBaseUrl(putReqStr,"http://api.login2explore.com:5577","/api/iml");
+        alert(JSON.stringify(resultObj));
+        jQuery.ajaxSetup({ async: true });
+        emptytheblanks();
+      }
+    </script>
+  </body>
+</html>
